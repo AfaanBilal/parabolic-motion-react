@@ -11,6 +11,8 @@ let vSin = 0;
 let frame = 0;
 let intervalMs = 1000;
 
+let intervalHandle = 0;
+
 function App() {
     const canvas = React.useRef(null);
     const getCtx = () => canvas.current ? (canvas.current as HTMLCanvasElement).getContext("2d") : null;
@@ -30,11 +32,11 @@ function App() {
     const [sg, setSg] = React.useState(false);
 
     const [inputsDisabled, setInputsDisabled] = React.useState(false);
-    const [intervalHandle, setIntervalHandle] = React.useState(0);
+    const [_, setForceReRender] = React.useState(false);
 
     const removeInterval = () => {
         clearInterval(intervalHandle);
-        setIntervalHandle(0);
+        intervalHandle = 0;
     };
 
     const draw = (ctx: CanvasRenderingContext2D) => {
@@ -63,16 +65,20 @@ function App() {
         if (intervalHandle) return;
 
         clearInterval(intervalHandle);
-        setIntervalHandle(setInterval(() => {
+        intervalHandle = setInterval(() => {
             const ctx = getCtx();
             ctx && draw(ctx);
             frame++;
-        }, Math.floor(1000 / fr)));
+        }, Math.floor(1000 / fr));
 
         setInputsDisabled(true);
     };
 
-    const pause = () => intervalHandle ? removeInterval() : start();
+    const pause = () => {
+        intervalHandle ? removeInterval() : start();
+        setForceReRender(p => !p);
+    };
+
     const reset = () => {
         a = toRad(ia);
         vCos = iv * Math.cos(a);
