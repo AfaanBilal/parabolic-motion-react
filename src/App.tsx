@@ -59,21 +59,20 @@ function App() {
         }
     };
 
-    const setupInterval = (ctx: CanvasRenderingContext2D | null, ms: number) => {
-        setIntervalHandle(setInterval(() => {
-            ctx && draw(ctx);
-            frame++;
-        }, ms));
-    };
-
     const start = () => {
         if (intervalHandle) return;
 
-        setupInterval(getCtx(), Math.floor(1000 / fr));
+        clearInterval(intervalHandle);
+        setIntervalHandle(setInterval(() => {
+            const ctx = getCtx();
+            ctx && draw(ctx);
+            frame++;
+        }, Math.floor(1000 / fr)));
+
         setInputsDisabled(true);
     };
 
-    const pause = () => intervalHandle ? removeInterval() : setupInterval(getCtx(), Math.floor(1000 / fr));
+    const pause = () => intervalHandle ? removeInterval() : start();
     const reset = () => {
         a = toRad(ia);
         vCos = iv * Math.cos(a);
