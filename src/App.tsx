@@ -1,3 +1,10 @@
+/**
+ * Parabolic Motion
+ *
+ * @author Afaan Bilal
+ * @link https://afaan.dev/parabolic-motion-react
+ */
+
 import React from "react"
 import "./App.css"
 
